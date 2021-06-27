@@ -1,0 +1,30 @@
+.login-container {
+    .form {
+        width: 25%;
+        margin: auto;
+        .login-panel {
+            border: 2px solid black;
+        }
+    }
+    .logo-container {
+        text-align: center;
+        width: 100%;
+        margin-top: 20vh;
+        display: inline-flex;
+        justify-content: center;
+        .logo{
+            margin-left: 41vw;
+            margin-right: -3vw;
+            align-self: space-between;
+            transform: scale(0.6);
+            // margin: auto;
+            height: 10vh;
+        }
+        .text {
+            font-size: 20px;
+            margin: auto;
+            margin-right: 45vw;
+        }
+    }
+}
+

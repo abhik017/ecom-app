@@ -1,0 +1,9 @@
+@import '~bootstrap/scss/bootstrap';
+@import './Login/index.scss';
+@import './ForgotPassword/index.scss';
+@import './Signup/inedx.scss';
+* {
+    font-family: 'Sarabun', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
