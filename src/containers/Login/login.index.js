@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import LoginForm from './login-form';
-import { userLoginRequest } from '../../actions/login.action';
+import { userLoginRequest, isJwtExpired } from '../../actions/login.action';
 import { getLoginResponse } from '../../reducers/login.reducer';
 
 class Login extends React.Component{
@@ -12,19 +12,6 @@ class Login extends React.Component{
 
     onSubmit = userData => {
         this.props.dispatch((userLoginRequest(userData, null)));
-    }
-
-    static getDerivedStateFromProps(nextProps, prevState) {
-        const {
-            loginResponse: {accessToken}
-        } = nextProps;
-        if(accessToken) {
-            localStorage.setItem(
-                'loginResponse',
-                JSON.stringify(nextProps.loginResponse),
-            );
-        }
-        return null;
     }
 
     render() {

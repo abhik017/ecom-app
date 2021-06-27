@@ -6,6 +6,7 @@ axios.interceptors.response.use(function (response) {
     return response;
   }, function (error) {
     if(error.response && error.response.status === 401) {
+      localStorage.removeItem('jwtExpiryTime');
       localStorage.removeItem('loginResponse');
       window.location.reload();
     }
