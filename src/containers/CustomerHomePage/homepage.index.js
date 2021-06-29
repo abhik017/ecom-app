@@ -28,7 +28,7 @@ class CustomerHomePage extends React.Component {
         const itemsArray = this.props.itemsArray;
         return(
             <>
-            {console.log(itemsArray)}
+            {/* {console.log(itemsArray)} */}
             <NavBar/>
             <div className="customer-homepage-container">
                 <Row className="items">

@@ -8,15 +8,12 @@ export const USER_LOGIN_ERROR = "USER_LOGIN_ERROR";
 export const VERIFY_JWT_SUCCESS = "VERIFY_JWT_SUCCESS";
 export const VERIFY_JWT_ERROR = "VERIFY_JWT_ERROR";
 export const VERIFY_JWT = "VERIFY_JWT";
-const dayToMilliseconds = 86400000;
+
 export function userLoginRequest(loginReq) {
     return async (dispatch) => {
         try {
             dispatch({type: USER_LOGIN});
-            const requestSentTime = Date.now();
             const response = await postApi('/v0/login', loginReq, AUTH_BASE_URL);
-            const responseRecievedTime = Date.now();
-            localStorage.setItem('jwtExpiryTime', (Date.now() + dayToMilliseconds - (responseRecievedTime - requestSentTime)).toString());
             localStorage.setItem('loginResponse', JSON.stringify(response.data));
             dispatch({type: USER_LOGIN_SUCCESS, payload: response.data});
             showSuccessMessage('Login Successful');
@@ -36,8 +33,19 @@ export function isJwtExpired() {
             const response = await getApi('/', DATA_BASE_URL);
             dispatch({type: VERIFY_JWT_SUCCESS, payload: response.data});
         } catch(err) {
-            console.log(err);
-            dispatch({type: VERIFY_JWT_ERROR, payload: err});
+            try {
+                const loginResponse = JSON.parse(localStorage.getItem('loginResponse'));
+                const refreshToken = loginResponse && loginResponse.refreshToken;
+                if( !refreshToken ) {
+                    throw Error("Cannot log in the user!");
+                }
+                const newLoginResponse = await postApi('/verify-refresh-token', {refreshToken: refreshToken}, DATA_BASE_URL);
+                localStorage.setItem('loginResponse', JSON.stringify(newLoginResponse.data));
+                window.location.reload();
+            } catch(err) {
+                console.log(err.message);
+                dispatch({type: VERIFY_JWT_ERROR, payload: err.message});
+            }
         }
     }
 }

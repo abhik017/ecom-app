@@ -2,16 +2,16 @@ import axios from 'axios';
 
 // axios.defaults.withCredentials = true;
 
-axios.interceptors.response.use(function (response) {
-    return response;
-  }, function (error) {
-    if(error.response && error.response.status === 401) {
-      localStorage.removeItem('jwtExpiryTime');
-      localStorage.removeItem('loginResponse');
-      window.location.reload();
-    }
-    return Promise.reject(error);
-});
+// axios.interceptors.response.use(function (response) {
+//     return response;
+//   }, function (error) {
+//     const loginResponse = localStorage.getItem('loginResponse');
+//     if(error.response && error.response.status === 401 && loginResponse) {
+//       localStorage.removeItem('loginResponse');
+//       window.location.reload();
+//     }
+//     return Promise.reject(error);
+// });
 
 export function setHeader(params) {
     const headers = {};
@@ -28,8 +28,8 @@ export function getApi(endpoint, baseUrl = '', params = '') {
     return axios.get(baseUrl + endpoint + params, { headers: setHeader() });
 }
 
-export async function postApi(endpoint, body, baseUrl = '', params = '') {
-    return await axios.post(baseUrl + endpoint + params, body, {
+export function postApi(endpoint, body, baseUrl = '', params = '') {
+    return axios.post(baseUrl + endpoint + params, body, {
         headers: setHeader()
     });
 }

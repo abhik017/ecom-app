@@ -11,15 +11,21 @@ import ForgotPassword from '../containers/ForgotPassword/forgot-password.index';
 import Signup from '../containers/SignUp/signup.index';
 import ResendOTP from '../containers/SignUp/resend-verification-code.index';
 import CustomerHomePage from '../containers/CustomerHomePage/homepage.index';
+import { connect } from 'react-redux';
+import { isJwtExpired } from './../actions/login.action';
+import { jwtExpiryStatus } from '../reducers/login.reducer';
 
 class RouteClass extends React.Component {
-    
+    constructor(props) {
+        super(props);
+    }
+    componentDidMount() {
+        this.props.dispatch(isJwtExpired());
+    }
     render() {
-        const jwtExpiryTimeString = localStorage.getItem('jwtExpiryTime');
-        const jwtExpiryTimeNum = parseInt(jwtExpiryTimeString);
-        const loginResponse = JSON.parse(localStorage.getItem('loginResponse'));
         // localStorage.removeItem('loginResponse');
-        if( !loginResponse || !jwtExpiryTimeNum || Date.now() > jwtExpiryTimeNum) {
+        // console.log(this.props.isJwtExpired);
+        if( this.props.isJwtExpired ) {
             return (
                 <Router>
                     <Switch>
@@ -32,7 +38,8 @@ class RouteClass extends React.Component {
                 </Router>
             );
         } else {
-            const userRole = loginResponse.role;
+            const loginResponse = JSON.parse(localStorage.getItem('loginResponse'));
+            const userRole = loginResponse && loginResponse.role;
             if(userRole === 'customer') {
                 return (
                     <Router>
@@ -58,5 +65,10 @@ class RouteClass extends React.Component {
     }
 }
 
+const mapStateToProps = state => {
+    return {
+        isJwtExpired: jwtExpiryStatus(state)
+    };
+}
 
-export default (RouteClass);
+export default connect(mapStateToProps)(RouteClass);
